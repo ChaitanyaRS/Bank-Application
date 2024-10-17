@@ -1,0 +1,47 @@
+# Java / Spring Boot
+/.idea/
+/*.class
+/target/
+/*.log
+*.jar
+*.war
+/.mvn
+/mvnw
+/mvnw.cmd
+/.settings/
+/build/
+
+# Dependency directories
+/.gradle/
+/node_modules/
+
+# IDE specific files
+*.iml
+*.hprof
+*.orig
+*.swp
+
+# Operating System files
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# React specific
+/build/
+/public/static/js/*.map
+/.env
+*.local
+
+# Logs
+logs/
+*.log
+
+# Other files
+*.class
+*.jar
+*.war
+*.log
+
+# Coverage reports
+coverage/

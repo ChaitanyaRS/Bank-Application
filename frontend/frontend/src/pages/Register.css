@@ -1,0 +1,27 @@
+.form-control{
+    width: 50%;
+    margin: auto;
+    padding: 15px;
+}
+.w-50{
+    width: 50%;
+}
+.w-100{
+    width: 100%;
+}
+.flex{
+    display: flex;
+    gap: 10px;
+}
+.flex-col{
+    display: flex;
+}
+.mt-10{
+    margin-top:10px
+}
+.row{
+    margin-top: 10px;
+}
+.flex-col{
+    flex-direction: column;
+}
