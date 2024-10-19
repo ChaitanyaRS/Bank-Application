@@ -6,6 +6,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Register from './pages/Register.jsx'
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
+import { Provider } from 'react-redux'
+import { store } from './redux/store.jsx'
+import UserDetails from './pages/UserDetails.jsx'
+import ProtectedRoute from './security/ProtectedRoute.jsx'
 
 const router = createBrowserRouter([
   {
@@ -20,7 +24,14 @@ const router = createBrowserRouter([
     }, {
       path: "/login",
       element: <Login />
+    }, {
+      path: "/user-details",
+      element: <UserDetails />
     }
+      // }, {
+      //   path: "/user-details",
+      //   element: <ProtectedRoute element={<UserDetails/>} />
+      // }
     ]
   }
 ])
@@ -28,7 +39,10 @@ const router = createBrowserRouter([
 
 
 createRoot(document.getElementById('root')).render(
+
   <StrictMode>
-    <RouterProvider router={router}/>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 )

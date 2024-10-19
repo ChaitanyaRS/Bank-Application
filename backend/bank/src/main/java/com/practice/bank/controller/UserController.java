@@ -20,8 +20,11 @@ import com.practice.bank.service.UserService;
 import com.practice.bank.utility.Credentials;
 import com.practice.bank.utility.RegisterationForm;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:5173/",allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -32,7 +35,6 @@ public class UserController {
 
     @Autowired
     private JwtService jwtService;
-
 
     @PostMapping("register")
     public ResponseEntity registerUser(@RequestBody RegisterationForm form) {
@@ -46,11 +48,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity loginUser(@RequestBody Credentials user) {
-        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        if(authentication.isAuthenticated()){
+    public ResponseEntity loginUser(@RequestBody Credentials user,HttpServletResponse response) {
+        Authentication authentication = manager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        if (authentication.isAuthenticated()) {
             System.out.println(jwtService.generateToken(user.getUsername()));
-            return ResponseEntity.ok(jwtService.generateToken(user.getUsername()));
+            String token = jwtService.generateToken(user.getUsername());
+
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(30000);
+            response.addCookie(cookie);
+            return ResponseEntity.ok(user.getUsername());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
@@ -63,11 +73,25 @@ public class UserController {
         return "";
     }
 
-    @GetMapping("/user")
-    public User getUserDetails(@RequestParam String username){
+    @GetMapping("/user-details")
+    public String getUserDetails(@RequestParam String username) {
         System.out.println(username);
         User user = userService.getUser(username);
-       // System.out.println(user);
-        return user;
+        // System.out.println(user);
+        return "Got the data from backend";
+    }
+    // @GetMapping("/user-details")
+    // public String getUserDetails() {
+    //     return "Got the data from backend";
+    // }
+
+    @PostMapping("/logout")
+    public ResponseEntity logoutUser(HttpServletResponse response){
+        Cookie cookie = new Cookie("token",null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.ok("User Logged out");
     }
 }

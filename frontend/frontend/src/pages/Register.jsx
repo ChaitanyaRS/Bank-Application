@@ -3,18 +3,24 @@ import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import './Register.css';
 import { registersUser } from '../api/userApi';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const { handleSubmit, control, formState: { errors } } = useForm();
     const [selectedValue, setSelectedValue] = useState('');
+    const navigate = useNavigate();
+    // const [registrationForm, setRegistrationForm] = useState({ username: '', password: '', email: '', phone_number: '', type: '' })
 
     const registerUser = (data) => {
         console.log(data);
-        
-        const { username, password, type, phone_number, email } = data;
-        const registrationForm = { username, password, type, phone_number, email };
-        const response = registersUser(registrationForm);
+
+        const { username, password, phone_number, email } = data;
+        //console.log(registrationForm);
+        const formData = { username, password, phone_number, email, type: selectedValue };
+        console.log(formData);
+        const response = registersUser(formData);
         console.log(response);
+        navigate('/login');
     }
 
     const handleChange = (e) => {
@@ -85,21 +91,23 @@ const Register = () => {
                             )}
                         />
                     </div>
-                    <FormControl fullWidth variant="outlined" sx={{ mt: 2 }} >
-                        <InputLabel id="demo-simple-select-label">Select Account Type</InputLabel>
-                        <Select
-                            
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={selectedValue}
-                            onChange={handleChange}
-                            label="Select an option"
-                        >
-                            <MenuItem value={10}>Savings</MenuItem>
-                            <MenuItem value={20}>Current</MenuItem>
+                    <div>
+                        <FormControl fullWidth variant="outlined" sx={{ mt: 2 }} >
+                            <InputLabel id="demo-simple-select-label">Select Account Type</InputLabel>
+                            <Select
+                                name="type"
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={selectedValue}
+                                onChange={handleChange}
+                                label="Select an option"
+                            >
+                                <MenuItem value={'Savings'}>Savings</MenuItem>
+                                <MenuItem value={'Current'}>Current</MenuItem>
 
-                        </Select>
-                    </FormControl>
+                            </Select>
+                        </FormControl>
+                    </div>
                     <div className="row flex">
                         <Controller
                             name='password'
