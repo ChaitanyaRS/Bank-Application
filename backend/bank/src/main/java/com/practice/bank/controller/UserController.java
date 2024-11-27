@@ -10,7 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,10 +23,11 @@ import com.practice.bank.utility.Credentials;
 import com.practice.bank.utility.RegisterationForm;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:5173",allowCredentials = "true",methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.DELETE,RequestMethod.OPTIONS},allowedHeaders = "*")
 public class UserController {
 
     @Autowired
@@ -54,11 +57,15 @@ public class UserController {
         if (authentication.isAuthenticated()) {
             System.out.println(jwtService.generateToken(user.getUsername()));
             String token = jwtService.generateToken(user.getUsername());
-
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
-            cookie.setMaxAge(30000);
+            // cookie.setMaxAge(30000);
+            cookie.setMaxAge(3600);
+            cookie.setDomain("localhost");
+            // cookie.set
+            // cookie.setAttribute("SameSite", "Lax");
+            // cookie.setSecure(false);
             response.addCookie(cookie);
             return ResponseEntity.ok(user.getUsername());
         }
@@ -69,24 +76,22 @@ public class UserController {
         return "";
     }
 
-    public String modifyUser() {
+    @PutMapping("/edit-user")
+    public String modifyUser(@RequestBody RegisterationForm form) {
         return "";
     }
 
     @GetMapping("/user-details")
-    public String getUserDetails(@RequestParam String username) {
+    public ResponseEntity getUserDetails(@RequestParam String username) {
         System.out.println(username);
         User user = userService.getUser(username);
         // System.out.println(user);
-        return "Got the data from backend";
+        return ResponseEntity.ok(user);
     }
-    // @GetMapping("/user-details")
-    // public String getUserDetails() {
-    //     return "Got the data from backend";
-    // }
 
-    @PostMapping("/logout")
+    @PostMapping("/logout-user")
     public ResponseEntity logoutUser(HttpServletResponse response){
+        System.out.println("Reached logout method");
         Cookie cookie = new Cookie("token",null);
         cookie.setHttpOnly(true);
         cookie.setPath("/");

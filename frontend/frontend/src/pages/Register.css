@@ -25,3 +25,14 @@
 .flex-col{
     flex-direction: column;
 }
+.m-auto{
+    margin: auto;
+}
+.h3{
+    font-size: xx-large;
+    width: 50%;
+    text-align: center;
+}
+.align-center{
+    align-items: center;
+}

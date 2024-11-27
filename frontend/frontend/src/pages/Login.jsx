@@ -15,9 +15,11 @@ const Login = () => {
     const response = await dispatch(loginApi(data));
 
     if (response.meta.requestStatus === "fulfilled") {
-      // console.log(response);
       
-      navigate("/user-details")
+      console.log("Login response.payload = ",response.payload);
+      
+      // localStorage.setItem('username',response.payload);
+      navigate("/");
     } else {
       console.error(response.message, "User was not logged in.");
     }

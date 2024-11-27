@@ -15,7 +15,6 @@ const Register = () => {
         console.log(data);
 
         const { username, password, phone_number, email } = data;
-        //console.log(registrationForm);
         const formData = { username, password, phone_number, email, type: selectedValue };
         console.log(formData);
         const response = registersUser(formData);

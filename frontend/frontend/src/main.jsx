@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Register from './pages/Register.jsx'
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
+import TransferMoney from './pages/TransferMoney.jsx'
+import AddMoney from './pages/AddMoney.jsx'
 import { Provider } from 'react-redux'
 import { store } from './redux/store.jsx'
 import UserDetails from './pages/UserDetails.jsx'
@@ -27,6 +29,12 @@ const router = createBrowserRouter([
     }, {
       path: "/user-details",
       element: <UserDetails />
+    }, {
+      path: "/add-money",
+      element: <AddMoney />
+    }, {
+      path: "/transfer-money",
+      element: <TransferMoney />
     }
       // }, {
       //   path: "/user-details",
@@ -40,9 +48,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
 
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 )

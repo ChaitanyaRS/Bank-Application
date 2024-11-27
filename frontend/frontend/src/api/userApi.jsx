@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { URL } from "../constants";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -29,14 +29,39 @@ export const loginApi = createAsyncThunk(
 
 export const getUserData = createAsyncThunk(
     'auth/userData',
-    async (data) => {
+    async (username, {rejectWithValue}) => {
         try {
-            const username = useSelector(state => state.auth.payload);
-            console.log("username ", username);
+            //const username = useSelector(state => state.auth.payload);
+            console.log("userData username param :", username);
             const response = await axios.get(`${URL}user-details`, {
+                params:{username },
                 withCredentials: true,
             })
+            // console.log("userData response :", response);
+            const { headers,config,request, ...serializableData } = response;
+            console.log("Response Data :",response);
+            console.log("Serializable data :",serializableData);
+            
+            return serializableData;
+        } catch (exception) {
+            console.error(exception);
+            return rejectWithValue(exception.response?.data || "An error occured");
+        }
+    }
+)
 
+export const updateUserData = createAsyncThunk(
+    'auth/updateData',
+    async (data, {rejectWithValue}) => {
+        try {
+            const response = await axios.put(`${URL}edit-user`,data, {
+                withCredentials: true,
+            })
+            // const { headers,config,request, ...serializableData } = response;
+            console.log("Response Data :",response);
+            // console.log("Serializable data :",serializableData);
+            return 'done';
+            // return serializableData;
         } catch (exception) {
             return rejectWithValue(exception.response?.data || "An error occured")
         }
@@ -45,15 +70,41 @@ export const getUserData = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
-    async () => {
+    async (_, {rejectWithValue}) => {
         try {
-            const response = await axios.post(`${URL}logout`, {
+            const response = await axios.post(`${URL}logout-user`, null,{
                 withCredentials: true
             })
-            console.log(response);
-            return response;
+            // console.log("Reponse: " + response);
+            return response.status;
         } catch (exception) {
+            console.error("Exception in logout user method :",exception);
             return rejectWithValue(exception.response?.data || "Error while logout");
         }
     }
 )
+
+export const authUserApi = createAsyncThunk(
+    'auth/verifyUser',
+    async (_,{rejectWithValue})=>{
+        try {
+            const response = await axios.get(`${URL}auth`,{
+                withCredentials:true
+            })
+            // console.log("auth API response ",response);
+            
+            return response.status;
+        } catch (exception) {
+            // console.error("Exception :",exception);
+            return rejectWithValue(exception.response?.status || "Error while Authentication");
+        }
+    }
+)
+
+// export const authenticationUser = async()=>{
+//     const dispatch = useDispatch();
+//     const response = await dispatch(authUserApi);
+//     console.log("auth user method response :",response);
+//     return response;
+    
+// }

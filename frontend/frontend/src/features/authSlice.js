@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { loginApi, logoutUser } from "../api/userApi";
+import { getUserData, loginApi, logoutUser } from "../api/userApi";
 
 
 const initialState = {
-    isAuthenticated: false,
+    isAuthenticated: !!localStorage.getItem('username'),
     user: null,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,
@@ -27,7 +27,10 @@ const authSlice = createSlice({
             .addCase(loginApi.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.isAuthenticated = true;
-                state.user = action.payload; // Store user data if returned from API
+                // state.user = action.payload; // Store user data if returned from API
+                localStorage.setItem('username', action.payload);
+                console.log("localStorage set");
+                
             })
             .addCase(loginApi.rejected, (state, action) => {
                 state.status = 'failed';
@@ -39,7 +42,10 @@ const authSlice = createSlice({
             .addCase(logoutUser.fulfilled,(state) =>{
                 state.status ="succeeded",
                 state.isAuthenticated= false,
+                localStorage.removeItem('username');
+                console.log("local Storage removed");
                 state.user = null;
+                
             })
             .addCase(logoutUser.rejected,(state,action)=>{
                 state.status = "failed",
