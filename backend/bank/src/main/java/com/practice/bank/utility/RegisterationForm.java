@@ -13,4 +13,5 @@ public class RegisterationForm {
     private String email;
     private Long phone_number;
     private String type;
+    
 }

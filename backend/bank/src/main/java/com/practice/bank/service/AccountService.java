@@ -21,6 +21,8 @@ public class AccountService {
     @Autowired
     private UserRepo userRepo;
 
+    // public Account()
+
     public Account createAcc(User user){
         User user1 = userRepo.findByEmail(user.getEmail());
         Account acc = new Account(0.0,"Savings");
@@ -71,4 +73,5 @@ public class AccountService {
         
         return true;
        }
+
 }
